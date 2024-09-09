@@ -39,6 +39,7 @@ import com.seda.payer.core.dao.IoItaliaDao;
 import com.seda.payer.core.exception.DaoException;
 import com.sun.rowset.WebRowSetImpl;
 
+@SuppressWarnings("restriction")
 public class CaricaTabelleIoItaliaCore {
 
 	private static String PRINT_SYSOUT = "SYSOUT";
@@ -129,13 +130,22 @@ public class CaricaTabelleIoItaliaCore {
 							
 							printRow(PRINT_SYSOUT, "codSocieta2: " + codSocieta2 + "; codiceUtente: " + codiceUtente + "; chiaveEnte: " + chiaveEnte + "; tipoServizio: " + tipoServizio + "; impostaServizio: " + impostaServizio);
 							
-							IoItaliaConfigurazione conf2 = italiadao.selectConfigurazione(codSocieta2, codiceUtente,
-									chiaveEnte, tipoServizio, impostaServizio);
-
+							//inizio LP 20240907 - PAGONET-604
+							//IoItaliaConfigurazione conf2 = italiadao.selectConfigurazione(codSocieta2, codiceUtente,
+							//		chiaveEnte, tipoServizio, impostaServizio);
+							IoItaliaConfigurazione conf2 = italiadao.selectConfigurazioneTailBis(false, codSocieta2, codiceUtente,
+									chiaveEnte, tipoServizio, impostaServizio, false);
+							//fine LP 20240907 - PAGONET-604
+							
 							if (conf2 != null) {
-								long idFornitura2 = italiadao.insertFornitura(codSocieta2, codiceUtente, chiaveEnte,
+								//inizio LP 20240907 - PAGONET-604
+								//long idFornitura2 = italiadao.insertFornitura(codSocieta2, codiceUtente, chiaveEnte,
+								//		tipoServizio, impostaServizio,
+								//		"CSV-" + FilenameUtils.getBaseName(file.getName()));
+								long idFornitura2 = italiadao.insertFornituraTail(false, codSocieta2, codiceUtente, chiaveEnte,
 										tipoServizio, impostaServizio,
 										"CSV-" + FilenameUtils.getBaseName(file.getName()));
+								//fine LP 20240907 - PAGONET-604
 
 								printRow(PRINT_SYSOUT, "listaMex.size: " + listaMex.size());
 								
@@ -144,8 +154,11 @@ public class CaricaTabelleIoItaliaCore {
 									ioItaliamessaggio.setIdFornitura(idFornitura2);
 									printRow(PRINT_SYSOUT, "idFornitura2: " + idFornitura2);
 									try {
-									italiadao.insertMessaggio(ioItaliamessaggio);
-									}catch(Exception e) {e.printStackTrace();}
+										//inizio LP 20240907 - PAGONET-604
+										//italiadao.insertMessaggio(ioItaliamessaggio);
+										italiadao.insertMessaggioTail(false, ioItaliamessaggio);
+										//fine LP 20240907 - PAGONET-604
+									} catch(Exception e) {e.printStackTrace();}
 									caricati++;
 								}
 								listConfig.put(conf2.getIdConfigurazione(), caricati);
@@ -187,19 +200,29 @@ public class CaricaTabelleIoItaliaCore {
 							IoItaliaDao italiadao = new IoItaliaDao(connection, schema);
 //							String codSoc = italiadao.selectCodiceSocieta(codiceUtente, chiaveEnte, "", "");
 //							YLM PG22XX06 INI
-							IoItaliaConfigurazione conf2 = italiadao.selectConfigurazioneTail(listaMexBolzano.get(0).getWsKey1(),true);
+							//inizio LP 20240907 - PAGONET-604
+							//IoItaliaConfigurazione conf2 = italiadao.selectConfigurazioneTail(listaMexBolzano.get(0).getWsKey1(), true);
+							IoItaliaConfigurazione conf2 = italiadao.selectConfigurazioneTailBis(false, listaMexBolzano.get(0).getWsKey1(), true);
+							//fine LP 20240907 - PAGONET-604
 //							YLM PG22XX06 FINE
 							if (conf2 != null) {
-
-								long idFornitura2 = italiadao.insertFornitura(conf2.getCodiceSocieta(), codiceUtente,
+								//inizio LP 20240907 - PAGONET-604
+								//long idFornitura2 = italiadao.insertFornitura(conf2.getCodiceSocieta(), codiceUtente,
+								//		chiaveEnte, conf2.getTipologiaServizio(), conf2.getImpostaServizio(),
+								//		"CSV-" + FilenameUtils.getBaseName(file.getName()));
+								long idFornitura2 = italiadao.insertFornituraTail(false, conf2.getCodiceSocieta(), codiceUtente,
 										chiaveEnte, conf2.getTipologiaServizio(), conf2.getImpostaServizio(),
 										"CSV-" + FilenameUtils.getBaseName(file.getName()));
+								//fine LP 20240907 - PAGONET-604
 
 								for (IoItaliaMessaggioBolzano ioItaliamessaggio : listaMexBolzano) {
 									ioItaliamessaggio.setTipologiaServizio(conf2.getTipologiaServizio());
 									ioItaliamessaggio.setCutecute(codiceUtente);
 									ioItaliamessaggio.setIdFornitura(idFornitura2);
-									italiadao.insertMessaggio(ioItaliamessaggio);
+									//inizio LP 20240907 - PAGONET-604
+									//italiadao.insertMessaggio(ioItaliamessaggio);
+									italiadao.insertMessaggioTail(false, ioItaliamessaggio);
+									//fine LP 20240907 - PAGONET-604
 									caricati++;
 								}
 								listConfig.put(conf2.getIdConfigurazione(), caricati);
@@ -352,7 +375,10 @@ public class CaricaTabelleIoItaliaCore {
 		String chiaveEnte = null;
 
 		ArchivioCarichiDao archivioCarichiDao = new ArchivioCarichiDao(connection, this.schema);
-		chiaveEnte = archivioCarichiDao.getKeyEnteEC(idDominio);
+		//inizio LP 20240907 - PAGONET-604
+		//chiaveEnte = archivioCarichiDao.getKeyEnteEC(idDominio);
+		chiaveEnte = archivioCarichiDao.getKeyEnteECTail(false, idDominio);
+		//fine LP 20240907 - PAGONET-604
 
 		return chiaveEnte;
 	}
@@ -371,8 +397,12 @@ public class CaricaTabelleIoItaliaCore {
 		configUtenteTipoServizioEnte.getEnte().getAnagEnte().setChiaveEnte(chiaveEnte);
 		configUtenteTipoServizioEnte.getTipoServizio().setCodiceTipologiaServizio(tipologiaServizio);
 		
-		dao.doRowSets(configUtenteTipoServizioEnte, "", "", "", "");
+		//inizio LP 20240907 - PAGONET-604
+		//dao.doRowSets(configUtenteTipoServizioEnte, "", "", "", "");
+		//String xml = dao.getWebRowSetXml(ConfigUtenteTipoServizioEnteDao.IDX_DOLIST_LISTA);
+		dao.doRowSets(false, configUtenteTipoServizioEnte, "", "", "", "");
 		String xml = dao.getWebRowSetXml(ConfigUtenteTipoServizioEnteDao.IDX_DOLIST_LISTA);
+		//fine LP 20240907 - PAGONET-604
 		
 		try (WebRowSetImpl wrs = new WebRowSetImpl()) {
 			
@@ -397,9 +427,15 @@ public class CaricaTabelleIoItaliaCore {
 //			YLM PG22XX06 INI 
 			IoItaliaConfigurazione config = new IoItaliaConfigurazione();
 			if (templateName.equalsIgnoreCase("aosta")){
-				config = dao.selectConfigurazione(entry.getKey());
+				//inizio LP 20240907 - PAGONET-604
+				//config = dao.selectConfigurazione(entry.getKey());
+				config = dao.selectConfigurazioneTailBis(false, entry.getKey(), false);
+				//fine LP 20240907 - PAGONET-604
 			} else {
-				config= dao.selectConfigurazioneTail(entry.getKey(),true);
+				//inizio LP 20240907 - PAGONET-604
+				//config= dao.selectConfigurazioneTail(entry.getKey(), true);
+				config = dao.selectConfigurazioneTailBis(false, entry.getKey(), true);
+				//fine LP 20240907 - PAGONET-604
 			}
 //			YLM PG22XX06 FINE
 			

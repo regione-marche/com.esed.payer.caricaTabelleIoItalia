@@ -36,7 +36,6 @@ public class EMailSender {
 		try {
 			emsRes = (EMailSenderResponse) emsCaller.getEMailSender(emsBean);
 		} catch (Throwable e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
