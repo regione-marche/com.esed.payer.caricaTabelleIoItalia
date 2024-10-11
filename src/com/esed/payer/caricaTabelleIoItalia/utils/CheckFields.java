@@ -39,12 +39,10 @@ public class CheckFields {
 				String[] campi = linea.split("\\|");
 				if (campi.length != 11) {
 					listaMex.clear();
-					System.err.println(
-							"============================================================================================");
+					System.err.println("============================================================================================");
 					System.err.println("FILE SCARTATO: Errore alla riga " + posizioneMessaggio++ + " del file");
 					System.err.println("Numero campi diverso da 11.");
-					System.err.println(
-							"============================================================================================");
+					System.err.println("============================================================================================");
 					return listaMex;
 
 				} else {
@@ -56,16 +54,14 @@ public class CheckFields {
 						messaggio.setIdDominio(campi[0]);
 						messaggio.setTipologiaServizio(campi[1]);
 						messaggio.setImpostaServizio(campi[2]);
-						messaggio.setTimestampParsingFile(
-								LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS")));
+						messaggio.setTimestampParsingFile(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS")));
 						messaggio.setPosizione(1);
 						messaggio.setOggettoMessaggio(campi[3]);
 						messaggio.setCorpoMessaggio(campi[4]);
 						messaggio.setCodiceFiscale(campi[5]);
 
 						String[] data = campi[6].split("/");
-						messaggio.setDataScadenzaMessaggio(Date.valueOf(LocalDate.of(Integer.valueOf(data[2]),
-								Integer.valueOf(data[1]), Integer.valueOf(data[0]))));
+						messaggio.setDataScadenzaMessaggio(Date.valueOf(LocalDate.of(Integer.valueOf(data[2]), Integer.valueOf(data[1]), Integer.valueOf(data[0]))));
 
 						messaggio.setStato("0");
 
@@ -86,12 +82,10 @@ public class CheckFields {
 
 						listaMex.clear();
 
-						System.err.println(
-								"============================================================================================");
+						System.err.println("============================================================================================");
 						System.err.println("FILE SCARTATO: Errore alla riga " + posizioneMessaggio++ + " del file");
 						System.err.println("Uno o più campi non corretti");
-						System.err.println(
-								"============================================================================================");
+						System.err.println("============================================================================================");
 
 						return listaMex;
 
@@ -132,12 +126,10 @@ public class CheckFields {
 				String[] campi = linea.split("\\|");
 				if (campi.length != 11) {
 					listaMex.clear();
-					System.err.println(
-							"============================================================================================");
+					System.err.println("============================================================================================");
 					System.err.println("FILE SCARTATO: Errore alla riga " + posizioneMessaggio++ + " del file");
 					System.err.println("Numero campi diverso da 11.");
-					System.err.println(
-							"============================================================================================");
+					System.err.println("============================================================================================");
 					return listaMex;
 
 				} else {
@@ -149,16 +141,14 @@ public class CheckFields {
 						messaggio.setIdDominio(campi[0]);
 						messaggio.setWsKey1(campi[1]);
 						messaggio.setWsKey2(campi[2]);
-						messaggio.setTimestampParsingFile(
-								LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS")));
+						messaggio.setTimestampParsingFile(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS")));
 						messaggio.setPosizione(1);
 						messaggio.setOggettoMessaggio(campi[3]);
 						messaggio.setCorpoMessaggio(campi[4]);
 						messaggio.setCodiceFiscale(campi[5]);
 
 						String[] data = campi[6].split("/");
-						messaggio.setDataScadenzaMessaggio(Date.valueOf(LocalDate.of(Integer.valueOf(data[2]),
-								Integer.valueOf(data[1]), Integer.valueOf(data[0]))));
+						messaggio.setDataScadenzaMessaggio(Date.valueOf(LocalDate.of(Integer.valueOf(data[2]), Integer.valueOf(data[1]), Integer.valueOf(data[0]))));
 
 						messaggio.setStato("0");
 
@@ -178,12 +168,10 @@ public class CheckFields {
 					} else {
 
 						listaMex.clear();
-						System.err.println(
-								"============================================================================================");
+						System.err.println("============================================================================================");
 						System.err.println("FILE SCARTATO: Errore alla riga " + posizioneMessaggio++ + " del file");
 						System.err.println("Uno o più campi non corretti");
-						System.err.println(
-								"============================================================================================");
+						System.err.println("============================================================================================");
 						return listaMex;
 
 					}
